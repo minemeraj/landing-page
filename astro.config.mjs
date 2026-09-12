@@ -4,7 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 import { d1, r2, sandbox } from "@emdash-cms/cloudflare";
 import { formsPlugin } from "@emdash-cms/plugin-forms";
 import webhookNotifier from "@emdash-cms/plugin-webhook-notifier";
-import { betterAuthProvider, betterAuthSettingsPlugin } from "@theweekendprojects/better-auth";
+import { betterAuthProvider, betterAuthSettingsPlugin } from "emdash-better-auth";
 import { defineConfig, fontProviders } from "astro/config";
 import emdash from "emdash/astro";
 import emdashSmtp from "emdash-smtp";
@@ -13,14 +13,14 @@ export default defineConfig({
 	output: "server",
 	// Canonical public origin of the site. Set this to the real domain, NOT the
 	// *.workers.dev deploy URL. Astro uses it for canonical links, RSS and
-	// sitemaps, and the @theweekendprojects/better-auth plugin reads it (via
+	// sitemaps, and the emdash-better-auth plugin reads it (via
 	// context.site) to build absolute verification / password-reset email links
 	// — so those links point at the real domain even when a request happens to
 	// arrive on the raw *.workers.dev host.
 	site: "https://theweekendprojects.com",
 	adapter: cloudflare(),
 	// Tailwind v4 is required to compile the Better Auth UI (HeroUI) styles used
-	// by the @theweekendprojects/better-auth plugin's auth pages. Its output is
+	// by the emdash-better-auth plugin's auth pages. Its output is
 	// scoped to the auth island (imported only there), so it doesn't affect the
 	// site's own token/theme styling.
 	vite: {
