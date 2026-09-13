@@ -30,9 +30,14 @@ const canUseAdmin = (user?.role ?? 0) >= 30; // Role.AUTHOR
 			</a>
 		)}
 		{isLoggedIn ? (
-			<a href="/auth/sign-out" class="mobile-nav-link">
-				Sign out
-			</a>
+			<>
+				<a href="/account" class="mobile-nav-link">
+					My account
+				</a>
+				<a href="/auth/sign-out" class="mobile-nav-link">
+					Sign out
+				</a>
+			</>
 		) : (
 			<>
 				<a href="/login" class="mobile-nav-link">
