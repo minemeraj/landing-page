@@ -11,6 +11,8 @@ import {
 	Image,
 	PortableText,
 	WidgetArea,
+	Comments,
+	CommentForm,
 } from "emdash/ui";
 import Base from "../../layouts/Base.astro";
 import PostCard from "../../components/PostCard.astro";
@@ -245,6 +247,24 @@ const publishDate =
 			</aside>
 		</div>
 	</article>
+
+	{/* Comments — full-width below the article, constrained to the reading
+	    column width. Backend is EmDash core (moderation queue at
+	    /_emdash/api/admin/comments); only approved comments render. A
+	    logged-in subscriber's comment auto-fills their identity. */}
+	<section class="post-comments">
+		<div class="post-comments-inner">
+			<h2 class="post-comments-title">Comments</h2>
+			<Comments
+				collection="posts"
+				contentId={post.data.id}
+				threaded
+				reactions
+				sort="best"
+			/>
+			<CommentForm collection="posts" contentId={post.data.id} />
+		</div>
+	</section>
 
 	{
 		otherPostsWithTags.length > 0 && (
@@ -848,6 +868,29 @@ const publishDate =
 		background: var(--color-bg-subtle);
 		padding: var(--spacing-16) 0;
 		margin-top: var(--spacing-16);
+	}
+
+	/* Comments: a centered column at the article reading width, so the
+	   EmDash comment list + form sit tidily under the article rather than
+	   stretching full-bleed. The components render semantic HTML with theme
+	   CSS variables, so they inherit the site palette. */
+	.post-comments {
+		margin-top: var(--spacing-16);
+	}
+
+	.post-comments-inner {
+		max-width: var(--content-width);
+		margin: 0 auto;
+		padding: 0 var(--spacing-6);
+		display: flex;
+		flex-direction: column;
+		gap: var(--spacing-8);
+	}
+
+	.post-comments-title {
+		font-size: var(--font-size-2xl);
+		font-weight: var(--font-weight-heading);
+		letter-spacing: var(--tracking-tight);
 	}
 
 	.more-inner {
