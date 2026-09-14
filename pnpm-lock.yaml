@@ -45,8 +45,8 @@ importers:
         specifier: ^0.30.0
         version: 0.30.0(@astrojs/react@6.0.5(@types/node@26.4.0)(@types/react-dom@19.2.5(@types/react@18.3.31))(@types/react@18.3.31)(esbuild@0.28.2)(jiti@2.7.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(yaml@2.9.0))(@atcute/identity@2.0.2(@atcute/lexicons@2.1.0)(typescript@7.0.2))(@date-fns/tz@1.5.0)(@floating-ui/dom@1.8.0)(@tiptap/extensions@3.30.6(@tiptap/core@3.30.6(@tiptap/pm@3.30.6))(@tiptap/pm@3.30.6))(@tiptap/pm@3.30.6)(@types/react-dom@19.2.5(@types/react@18.3.31))(@types/react@18.3.31)(astro@7.2.10(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.4.0)(jiti@2.7.0)(yaml@2.9.0))(date-fns@4.4.0)(echarts@6.1.0)(prosemirror-model@1.25.11)(prosemirror-state@1.4.4)(prosemirror-view@1.42.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@7.0.2)
       emdash-better-auth:
-        specifier: ^0.3.0
-        version: 0.3.0(720d6a828c16165ac85eff618f5c0fb1)
+        specifier: ^0.4.0
+        version: 0.4.0(720d6a828c16165ac85eff618f5c0fb1)
       emdash-smtp:
         specifier: ^0.3.4
         version: 0.3.4(emdash@0.30.0(@astrojs/react@6.0.5(@types/node@26.4.0)(@types/react-dom@19.2.5(@types/react@18.3.31))(@types/react@18.3.31)(esbuild@0.28.2)(jiti@2.7.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(yaml@2.9.0))(@atcute/identity@2.0.2(@atcute/lexicons@2.1.0)(typescript@7.0.2))(@date-fns/tz@1.5.0)(@floating-ui/dom@1.8.0)(@tiptap/extensions@3.30.6(@tiptap/core@3.30.6(@tiptap/pm@3.30.6))(@tiptap/pm@3.30.6))(@tiptap/pm@3.30.6)(@types/react-dom@19.2.5(@types/react@18.3.31))(@types/react@18.3.31)(astro@7.2.10(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.4.0)(jiti@2.7.0)(yaml@2.9.0))(date-fns@4.4.0)(echarts@6.1.0)(prosemirror-model@1.25.11)(prosemirror-state@1.4.4)(prosemirror-view@1.42.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@7.0.2))
@@ -3289,8 +3289,8 @@ packages:
   electron-to-chromium@1.5.417:
     resolution: {integrity: sha512-4T+DTDWuMPM4aHlHwWdAVCVWwp7LDilnhzkj+c/Lbj91XSQrLuOmZSLtS9Q4iIqjlPUbPOnC624zDVVHCHaolQ==}
 
-  emdash-better-auth@0.3.0:
-    resolution: {integrity: sha512-eO87pg1GzdGEocksRlZkhuAyoB7/EoQFXU+VLvVp5+sVsbIaOUf3PZASE+J4BPrt7FxHxnJedC3M2C/kez1C0w==}
+  emdash-better-auth@0.4.0:
+    resolution: {integrity: sha512-grwBk/tYFypOgd0ANkHQNYEKGujIdrvX0+IkMIGm9Qj/GW6grPvJZTNvlGB3MaCkEDOm8Xec4NJhBhbTEK7Zwg==}
     peerDependencies:
       emdash: '>=0.30.0'
       react: '>=19.2.6'
@@ -8312,7 +8312,7 @@ snapshots:
 
   electron-to-chromium@1.5.417: {}
 
-  emdash-better-auth@0.3.0(720d6a828c16165ac85eff618f5c0fb1):
+  emdash-better-auth@0.4.0(720d6a828c16165ac85eff618f5c0fb1):
     dependencies:
       '@better-auth-ui/core': 1.7.19(b5352c39dedea1fb848bee1e20d4dc4c)
       '@better-auth-ui/heroui': 1.7.19(c4ddcf1454e732b6a42e61da2d728e27)
