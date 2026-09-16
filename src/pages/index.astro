@@ -1,5 +1,5 @@
 ---
-import { getEmDashCollection, getTermsForEntries, getSiteSettings } from "emdash";
+import { getEmDashCollection, getTermsForEntries, getSiteSettings, getSeoMeta } from "emdash";
 import Base from "../layouts/Base.astro";
 import { getReadingTime } from "../utils/reading-time";
 import { resolveBlogSiteIdentity } from "../utils/site-identity";
@@ -22,6 +22,17 @@ const [{ entries: projects }, { entries: posts }, settings] = await Promise.all(
 ]);
 
 const { siteTitle, siteTagline } = resolveBlogSiteIdentity(settings);
+
+// SEO metadata for home page
+const seo = getSeoMeta(
+	{ data: { title: siteTitle, excerpt: siteTagline } },
+	{
+		siteTitle,
+		siteUrl: Astro.url.origin,
+		path: Astro.url.pathname.replace(/\/$/, ""),
+		defaultOgImage: undefined,
+	}
+);
 
 // Prefer projects explicitly marked featured; fall back to the most recent
 const featuredProjects = projects.filter((p) => p.data.featured).slice(0, FEATURED_PROJECTS_LIMIT);
@@ -57,7 +68,14 @@ const projectsData = projectsForHome.map((project) => ({
 }));
 ---
 
-<Base title={siteTitle} description={siteTagline}>
+<Base
+	title={seo.title}
+	description={seo.description}
+	image={seo.ogImage}
+	canonical={seo.canonical}
+	robots={seo.robots}
+	type="website"
+>
 	<!-- Hero Section -->
 	<section class="hero-section">
 		<div class="floating-shape shape-1"></div>

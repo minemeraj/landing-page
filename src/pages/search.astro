@@ -1,10 +1,25 @@
 ---
 export const prerender = false;
 
-import { search } from "emdash";
+import { search, getSeoMeta } from "emdash";
 import Base from "../layouts/Base.astro";
+import { resolveBlogSiteIdentity } from "../utils/site-identity";
 
 const query = Astro.url.searchParams.get("q")?.trim() || "";
+
+// Get site settings for SEO
+const { siteTitle, siteTagline } = resolveBlogSiteIdentity(await getSiteSettings());
+
+// SEO metadata for search page
+const seo = getSeoMeta(
+	{ data: { title: query ? `Search: ${query}` : "Search", excerpt: "Search blog posts" } },
+	{
+		siteTitle,
+		siteUrl: Astro.url.origin,
+		path: "/search",
+		defaultOgImage: undefined,
+	}
+);
 
 // Use the FTS-backed search() API instead of loading every post and
 // filtering in JS. FTS scales as the post count grows, returns ranked
@@ -16,8 +31,12 @@ const { items: results } = query
 ---
 
 <Base
-	title={query ? `Search: ${query}` : "Search"}
-	description="Search blog posts"
+	title={seo.title}
+	description={seo.description}
+	image={seo.ogImage}
+	canonical={seo.canonical}
+	robots={seo.robots}
+	type="website"
 >
 	<section class="search-page">
 		<h1 class="search-title">Search</h1>

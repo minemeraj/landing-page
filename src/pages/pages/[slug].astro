@@ -1,7 +1,8 @@
 ---
-import { getEmDashEntry, decodeSlug } from "emdash";
+import { getEmDashEntry, decodeSlug, getSeoMeta, getSiteSettings } from "emdash";
 import { PortableText } from "emdash/ui";
 import Base from "../../layouts/Base.astro";
+import { resolveBlogSiteIdentity } from "../../utils/site-identity";
 
 const slug = decodeSlug(Astro.params.slug);
 
@@ -16,10 +17,25 @@ if (!page) {
 }
 
 if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
+
+const { siteTitle, siteTagline } = resolveBlogSiteIdentity(await getSiteSettings());
+
+// SEO metadata for static page
+const seo = getSeoMeta(page, {
+	siteTitle,
+	siteUrl: Astro.url.origin,
+	path: `/pages/${slug}`,
+	defaultOgImage: undefined,
+});
 ---
 
 <Base
-	title={page.data.title}
+	title={seo.title}
+	pageTitle={seo.ogTitle}
+	description={seo.description}
+	image={seo.ogImage}
+	canonical={seo.canonical}
+	robots={seo.robots}
 	content={{ collection: "pages", id: page.data.id, slug }}
 >
 	<article class="page-article">

@@ -1,8 +1,35 @@
 ---
+import { getSeoMeta } from "emdash";
 import Base from "../layouts/Base.astro";
+import { resolveBlogSiteIdentity } from "../utils/site-identity";
+
+// Get site settings for SEO
+const { siteTitle, siteTagline } = resolveBlogSiteIdentity(await getSiteSettings());
+
+// SEO metadata for 404 page
+const seo = getSeoMeta(
+	{ data: { title: "Page not found", excerpt: "The page you're looking for doesn't exist" } },
+	{
+		siteTitle,
+		siteUrl: Astro.url.origin,
+		path: "/404",
+		defaultOgImage: undefined,
+	}
+);
+
+// Set 404 status
+Astro.response.status = 404;
 ---
 
-<Base title="Page not found">
+<Base
+	title={seo.title}
+	pageTitle={seo.ogTitle}
+	description={seo.description}
+	image={seo.ogImage}
+	canonical={seo.canonical}
+	robots="noindex, nofollow"
+	type="website"
+>
 	<div class="not-found">
 		<h1>404</h1>
 		<p>The page you're looking for doesn't exist.</p>

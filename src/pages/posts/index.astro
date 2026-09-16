@@ -1,9 +1,23 @@
 ---
-import { getEmDashCollection, getTermsForEntries } from "emdash";
+import { getEmDashCollection, getTermsForEntries, getSeoMeta } from "emdash";
 import Base from "../../layouts/Base.astro";
 import PostCard from "../../components/PostCard.astro";
 import { getReadingTime } from "../../utils/reading-time";
-import { getTaxonomyTerms } from "emdash";
+import { resolveBlogSiteIdentity } from "../../utils/site-identity";
+
+// Get site settings for SEO
+const { siteTitle, siteTagline } = resolveBlogSiteIdentity(await getSiteSettings());
+
+// SEO metadata for all posts page
+const seo = getSeoMeta(
+	{ data: { title: "All Posts", excerpt: "Browse all blog posts" } },
+	{
+		siteTitle,
+		siteUrl: Astro.url.origin,
+		path: "/posts",
+		defaultOgImage: undefined,
+	}
+);
 
 // Get all post categories for filtering
 const categories = await getTaxonomyTerms("posts", "category");
@@ -38,7 +52,14 @@ const postsWithTags = posts.map((post) => ({
 }));
 ---
 
-<Base title="All Posts" description="Browse all blog posts">
+<Base
+	title={seo.title}
+	description={seo.description}
+	image={seo.ogImage}
+	canonical={seo.canonical}
+	robots={seo.robots}
+	type="website"
+>
 	<div class="posts-page">
 		<header class="page-header">
 			<h1 class="page-title">All Articles</h1>
