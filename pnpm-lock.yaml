@@ -26,6 +26,9 @@ importers:
       '@emdash-cms/plugin-webhook-notifier':
         specifier: ^0.2.0
         version: 0.2.0(emdash@0.30.0(@astrojs/react@6.0.5(@types/node@26.4.0)(@types/react-dom@19.2.5(@types/react@18.3.31))(@types/react@18.3.31)(esbuild@0.28.2)(jiti@2.7.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(yaml@2.9.0))(@atcute/identity@2.0.2(@atcute/lexicons@2.1.0)(typescript@7.0.2))(@date-fns/tz@1.5.0)(@floating-ui/dom@1.8.0)(@tiptap/extensions@3.30.6(@tiptap/core@3.30.6(@tiptap/pm@3.30.6))(@tiptap/pm@3.30.6))(@tiptap/pm@3.30.6)(@types/react-dom@19.2.5(@types/react@18.3.31))(@types/react@18.3.31)(astro@7.2.10(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.4.0)(jiti@2.7.0)(yaml@2.9.0))(date-fns@4.4.0)(echarts@6.1.0)(prosemirror-model@1.25.11)(prosemirror-state@1.4.4)(prosemirror-view@1.42.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@7.0.2))
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.30.0
+        version: 1.30.0(zod@4.5.4)
       '@tailwindcss/container-queries':
         specifier: ^0.1.1
         version: 0.1.1(tailwindcss@4.3.3)
@@ -72,6 +75,9 @@ importers:
       '@cloudflare/workers-types':
         specifier: ^4.20260305.1
         version: 4.20260702.1
+      '@jdevalk/emdash-plugin-seo':
+        specifier: ^0.12.0
+        version: 0.12.0(astro@7.2.10(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.4.0)(jiti@2.7.0)(yaml@2.9.0))(emdash@0.30.0(@astrojs/react@6.0.5(@types/node@26.4.0)(@types/react-dom@19.2.5(@types/react@18.3.31))(@types/react@18.3.31)(esbuild@0.28.2)(jiti@2.7.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(yaml@2.9.0))(@atcute/identity@2.0.2(@atcute/lexicons@2.1.0)(typescript@7.0.2))(@date-fns/tz@1.5.0)(@floating-ui/dom@1.8.0)(@tiptap/extensions@3.30.6(@tiptap/core@3.30.6(@tiptap/pm@3.30.6))(@tiptap/pm@3.30.6))(@tiptap/pm@3.30.6)(@types/react-dom@19.2.5(@types/react@18.3.31))(@types/react@18.3.31)(astro@7.2.10(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.4.0)(jiti@2.7.0)(yaml@2.9.0))(date-fns@4.4.0)(echarts@6.1.0)(prosemirror-model@1.25.11)(prosemirror-state@1.4.4)(prosemirror-view@1.42.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@7.0.2))(typescript@7.0.2)
       '@tailwindcss/vite':
         specifier: ^4.3.3
         version: 4.3.3(vite@8.2.2(@types/node@26.4.0)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.0))
@@ -1545,6 +1551,22 @@ packages:
   '@internationalized/string@3.2.10':
     resolution: {integrity: sha512-PDx6//vHSpRnHfxqMqto11zQvhsaU74O3mKv2F/0eicGZcl9NLjQmGlbHz/LsJh5tLKp4A4L7ZVTzN1/MmMTvA==}
 
+  '@jdevalk/astro-seo-graph@0.7.0':
+    resolution: {integrity: sha512-aYQi680n3zey8XBkN1w7L0rK20mV6/y0xA4gFbWXPgCMip7bd3d195Qn88Xg46NqQ0wm6BuASemU0YzC6Wr35Q==}
+    peerDependencies:
+      astro: ^5.0.0 || ^6.0.0
+
+  '@jdevalk/emdash-plugin-seo@0.12.0':
+    resolution: {integrity: sha512-ZU6mIsPafovZvz6h6BAzU4U0rD77NB9c4MiB30ecboPOv4q8Tg6uLpu/2yaR5rPdc2tNBWbrLbW5bSFUypvYLw==}
+    peerDependencies:
+      emdash: ^0.21.0
+
+  '@jdevalk/seo-graph-core@0.6.0':
+    resolution: {integrity: sha512-v1UdAl2+H1qEc2E1yPecNw4Zs7sNqJPB0zRDUXya4YSrYd3wJMy/yk6JlYEzoELbH48ZDc00TB+nD+MqI9imOA==}
+
+  '@jdevalk/seo-graph-core@0.6.2':
+    resolution: {integrity: sha512-CjKJkytMFOlnmfib/H34iJ0+4clm7IujQqLxECO3EkIndPwkIN1xFLx762oUZieFP+Cr4jo8dosD+c2hSNEJNw==}
+
   '@jridgewell/gen-mapping@0.3.13':
     resolution: {integrity: sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA==}
 
@@ -2878,6 +2900,9 @@ packages:
     resolution: {integrity: sha512-2dOPJAZs6IiVotFaQB5Em0fYUNhX7cf2FfWf0dXfQ67wLmLXsUiQnRzb1BORrc9LS8YVQhXjhNXARB4kZwO+2w==}
     peerDependencies:
       astro: '>=4.6.0'
+
+  astro-seo@1.2.0:
+    resolution: {integrity: sha512-ZqS2ZLKJ9GZwcONho9W95xkGBWuPpikTsMBzjuq/6CKtKUEgMDbSZkoLwoZsmLVq/p52T4z7JwgjC3AtMg7Trg==}
 
   astro@7.2.10:
     resolution: {integrity: sha512-uPtD+nK6kQXugyq4kiMPwj9OI3Sae6HSerA5X+fuv2CPaDwxmokFPPFlGRKIAXH0QAKu+zot2q6yrLG61wFmqg==}
@@ -4472,6 +4497,15 @@ packages:
   scheduler@0.27.0:
     resolution: {integrity: sha512-eNv+WrVbKu1f3vbYJT/xtiF5syA5HPIMtf9IgY/nKg0sWqzAUEvqY/xm7OcZc/qafLx/iO9FgOmeSAp4v5ti/Q==}
 
+  schema-dts-lib@1.0.0:
+    resolution: {integrity: sha512-9MEO5vpQH9JdBioUupqluzxSYxPLjhmqRUudk15adUl/ypnRsM2/M1kN3AmVJQeG7nZqcL68H8JlGqQQT6vy9A==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      typescript: '>=4.9.5'
+
+  schema-dts@2.0.0:
+    resolution: {integrity: sha512-t7NoCy3Rn5GHGx6p7s1qIYK/AeIb8ZxJNR9WUNFkwMv2CiiGZBmqqYWc2FlZVm5ZbiHMY4OvBWhj7QtyrFO2Jw==}
+
   semver@6.3.1:
     resolution: {integrity: sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==}
     hasBin: true
@@ -5152,6 +5186,9 @@ packages:
     resolution: {integrity: sha512-O/PgfnpT1xKSDeQYSCfRI5Gy3hPf91mKVDuYLUHZJMiDFptvP41MSnWofm8dnCm0256ZNfZIM7DSzuSMAFnjHA==}
     peerDependencies:
       zod: ^3.25.28 || ^4
+
+  zod@3.25.76:
+    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
   zod@4.5.4:
     resolution: {integrity: sha512-sC95tT5iHHH9gtpj6A81kh+NEaRAUFN+qlUPDUbRfOMvNf5QCBqsb3WgvnpVtK5Y+4UfA6KqufotuTvMGiTlsA==}
@@ -6528,6 +6565,37 @@ snapshots:
     dependencies:
       '@swc/helpers': 0.5.23
 
+  '@jdevalk/astro-seo-graph@0.7.0(astro@7.2.10(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.4.0)(jiti@2.7.0)(yaml@2.9.0))(typescript@7.0.2)':
+    dependencies:
+      '@jdevalk/seo-graph-core': 0.6.0(typescript@7.0.2)
+      astro: 7.2.10(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.4.0)(jiti@2.7.0)(yaml@2.9.0)
+      astro-seo: 1.2.0
+      schema-dts: 2.0.0(typescript@7.0.2)
+      zod: 3.25.76
+    transitivePeerDependencies:
+      - typescript
+
+  '@jdevalk/emdash-plugin-seo@0.12.0(astro@7.2.10(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.4.0)(jiti@2.7.0)(yaml@2.9.0))(emdash@0.30.0(@astrojs/react@6.0.5(@types/node@26.4.0)(@types/react-dom@19.2.5(@types/react@18.3.31))(@types/react@18.3.31)(esbuild@0.28.2)(jiti@2.7.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(yaml@2.9.0))(@atcute/identity@2.0.2(@atcute/lexicons@2.1.0)(typescript@7.0.2))(@date-fns/tz@1.5.0)(@floating-ui/dom@1.8.0)(@tiptap/extensions@3.30.6(@tiptap/core@3.30.6(@tiptap/pm@3.30.6))(@tiptap/pm@3.30.6))(@tiptap/pm@3.30.6)(@types/react-dom@19.2.5(@types/react@18.3.31))(@types/react@18.3.31)(astro@7.2.10(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.4.0)(jiti@2.7.0)(yaml@2.9.0))(date-fns@4.4.0)(echarts@6.1.0)(prosemirror-model@1.25.11)(prosemirror-state@1.4.4)(prosemirror-view@1.42.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@7.0.2))(typescript@7.0.2)':
+    dependencies:
+      '@jdevalk/astro-seo-graph': 0.7.0(astro@7.2.10(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.4.0)(jiti@2.7.0)(yaml@2.9.0))(typescript@7.0.2)
+      '@jdevalk/seo-graph-core': 0.6.2(typescript@7.0.2)
+      emdash: 0.30.0(@astrojs/react@6.0.5(@types/node@26.4.0)(@types/react-dom@19.2.5(@types/react@18.3.31))(@types/react@18.3.31)(esbuild@0.28.2)(jiti@2.7.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(yaml@2.9.0))(@atcute/identity@2.0.2(@atcute/lexicons@2.1.0)(typescript@7.0.2))(@date-fns/tz@1.5.0)(@floating-ui/dom@1.8.0)(@tiptap/extensions@3.30.6(@tiptap/core@3.30.6(@tiptap/pm@3.30.6))(@tiptap/pm@3.30.6))(@tiptap/pm@3.30.6)(@types/react-dom@19.2.5(@types/react@18.3.31))(@types/react@18.3.31)(astro@7.2.10(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.4.0)(jiti@2.7.0)(yaml@2.9.0))(date-fns@4.4.0)(echarts@6.1.0)(prosemirror-model@1.25.11)(prosemirror-state@1.4.4)(prosemirror-view@1.42.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@7.0.2)
+    transitivePeerDependencies:
+      - astro
+      - typescript
+
+  '@jdevalk/seo-graph-core@0.6.0(typescript@7.0.2)':
+    dependencies:
+      schema-dts: 2.0.0(typescript@7.0.2)
+    transitivePeerDependencies:
+      - typescript
+
+  '@jdevalk/seo-graph-core@0.6.2(typescript@7.0.2)':
+    dependencies:
+      schema-dts: 2.0.0(typescript@7.0.2)
+    transitivePeerDependencies:
+      - typescript
+
   '@jridgewell/gen-mapping@0.3.13':
     dependencies:
       '@jridgewell/sourcemap-codec': 1.6.0
@@ -7878,6 +7946,8 @@ snapshots:
       '@portabletext/toolkit': 3.0.3
       '@portabletext/types': 2.0.15
       astro: 7.2.10(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.4.0)(jiti@2.7.0)(yaml@2.9.0)
+
+  astro-seo@1.2.0: {}
 
   astro@7.2.10(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.4.0)(jiti@2.7.0)(yaml@2.9.0):
     dependencies:
@@ -9654,6 +9724,16 @@ snapshots:
 
   scheduler@0.27.0: {}
 
+  schema-dts-lib@1.0.0(typescript@7.0.2):
+    dependencies:
+      typescript: 7.0.2
+
+  schema-dts@2.0.0(typescript@7.0.2):
+    dependencies:
+      schema-dts-lib: 1.0.0(typescript@7.0.2)
+    transitivePeerDependencies:
+      - typescript
+
   semver@6.3.1: {}
 
   semver@7.8.5: {}
@@ -10341,6 +10421,8 @@ snapshots:
   zod-to-json-schema@3.25.2(zod@4.5.4):
     dependencies:
       zod: 4.5.4
+
+  zod@3.25.76: {}
 
   zod@4.5.4: {}
 

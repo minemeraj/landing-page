@@ -135,6 +135,37 @@ const TOOLS = [
       },
     },
   },
+  {
+    name: 'delete_blog_post',
+    description: 'Delete a blog post by ID or slug',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        id: {
+          type: 'string',
+          description: 'The database ID (ULID) of the post to delete',
+        },
+        slug: {
+          type: 'string',
+          description: 'The slug of the post to delete (alternative to ID)',
+        },
+      },
+    },
+  },
+  {
+    name: 'clear_all_posts',
+    description: 'Delete all blog posts (use with caution)',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        confirm: {
+          type: 'string',
+          description: 'Type "yes" to confirm you want to delete all posts',
+        },
+      },
+      required: ['confirm'],
+    },
+  },
 ];
 
 const RESOURCES = [
@@ -389,6 +420,77 @@ async function handleToolCall(request) {
                     `(${p.slug ?? '?'})${p.data?.category ? ` · ${p.data.category}` : ''}`
                 )
                 .join('\n'),
+          },
+        ],
+      };
+    }
+
+    case 'delete_blog_post': {
+      const { id, slug } = args;
+
+      if (!id && !slug) {
+        throw new Error('Either id or slug is required to delete a post');
+      }
+
+      // First, get the post to confirm it exists and get its ID
+      const listResult = await emdashRequest('GET', `/_emdash/api/content/${COLLECTION}`);
+      const items = listResult?.data?.items ?? listResult?.items ?? [];
+      
+      let postId = id;
+      if (!postId && slug) {
+        const found = items.find((p) => p.slug === slug);
+        if (!found) {
+          throw new Error(`Post with slug "${slug}" not found`);
+        }
+        postId = found.id;
+      }
+
+      // Delete the post
+      await emdashRequest('DELETE', `/_emdash/api/content/${COLLECTION}/${postId}`, undefined);
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `Post deleted successfully.\n\nID: ${postId}${slug ? `\nSlug: ${slug}` : ''}`,
+          },
+        ],
+      };
+    }
+
+    case 'clear_all_posts': {
+      const { confirm } = args;
+
+      if (confirm !== 'yes') {
+        throw new Error('To clear all posts, you must confirm by passing confirm: "yes"');
+      }
+
+      const listResult = await emdashRequest('GET', `/_emdash/api/content/${COLLECTION}`);
+      const items = listResult?.data?.items ?? listResult?.items ?? [];
+
+      if (items.length === 0) {
+        return {
+          content: [
+            {
+              type: 'text',
+              text: 'No posts found to delete.',
+            },
+          ],
+        };
+      }
+
+      // Delete all posts
+      const deletedIds = [];
+      for (const item of items) {
+        await emdashRequest('DELETE', `/_emdash/api/content/${COLLECTION}/${item.id}`, undefined);
+        deletedIds.push(item.id);
+      }
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `Deleted ${deletedIds.length} post(s):\n\n${deletedIds.map((id) => `- ${id}`).join('\n')}`,
           },
         ],
       };

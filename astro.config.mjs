@@ -5,6 +5,7 @@ import { d1, r2, sandbox } from "@emdash-cms/cloudflare";
 import { formsPlugin } from "@emdash-cms/plugin-forms";
 import webhookNotifier from "@emdash-cms/plugin-webhook-notifier";
 import { betterAuthProvider, betterAuthSettingsPlugin } from "emdash-better-auth";
+import { seoPlugin } from "@jdevalk/emdash-plugin-seo";
 import { defineConfig, fontProviders } from "astro/config";
 import emdash from "emdash/astro";
 import emdashSmtp from "emdash-smtp";
@@ -40,7 +41,7 @@ export default defineConfig({
 			// Auth (verification toggles, canonical URL, Google + Better Auth
 			// secrets). The auth provider reads those values at request time with
 			// env-var fallback.
-			plugins: [formsPlugin(), emdashSmtp(), betterAuthSettingsPlugin()],
+			plugins: [formsPlugin(), emdashSmtp(), betterAuthSettingsPlugin(), seoPlugin()],
 			sandboxed: [webhookNotifier],
 			sandboxRunner: sandbox(),
 			marketplace: "https://marketplace.emdashcms.com",
