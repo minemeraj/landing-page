@@ -78,6 +78,63 @@ const TOOLS = [
       },
     },
   },
+  {
+    name: 'write_project',
+    description:
+      'Create a new project on The Weekend Projects (projects collection) as a draft. Use the `publish` flag to publish it live in one step.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        title: { type: 'string', description: 'Project title' },
+        description: {
+          type: 'string',
+          description: 'Short one-or-two sentence summary shown in cards and the hero',
+        },
+        fullContent: {
+          type: 'string',
+          description:
+            'Long-form case study. Markdown-lite: lines starting with "## " become H2 headings, "### " become H3, "- " become bullet list items, "> " a blockquote; blank lines separate paragraphs.',
+        },
+        techStack: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'Technologies used, shown as chips (e.g. ["Astro","Cloudflare Workers"])',
+        },
+        category: {
+          type: 'string',
+          enum: ['web', 'mobile', 'cli', 'library', 'api', 'design', 'other'],
+          description: 'Project category',
+        },
+        githubUrl: { type: 'string', description: 'Source repository URL (optional)' },
+        liveUrl: { type: 'string', description: 'Live/demo URL (optional)' },
+        featured: {
+          type: 'boolean',
+          description: 'Show on the homepage featured rail (default false)',
+        },
+        slug: { type: 'string', description: 'Optional explicit slug; omit to auto-generate from the title' },
+        publish: {
+          type: 'boolean',
+          description: 'Publish immediately after creating (default false — otherwise it stays a draft)',
+        },
+      },
+      required: ['title', 'description'],
+    },
+  },
+  {
+    name: 'get_projects',
+    description: 'List projects with basic info',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        limit: {
+          type: 'number',
+          description: 'Number of projects to return (default: 10)',
+          minimum: 1,
+          maximum: 100,
+        },
+      },
+    },
+  },
 ];
 
 const RESOURCES = [
@@ -129,22 +186,68 @@ async function emdashRequest(method, path, body) {
 /**
  * Convert caller-supplied content into EmDash Portable Text blocks.
  * - If it's already an array (Portable Text), pass through untouched.
- * - Otherwise split a string on blank lines into paragraph blocks, each with a
- *   single span child. Uses random block/span keys as EmDash expects.
+ * - Otherwise parse a Markdown-lite string into blocks:
+ *     "## "  -> h2 heading
+ *     "### " -> h3 heading
+ *     "- "   -> bullet list item
+ *     "> "   -> blockquote
+ *     blank line separates paragraphs; other lines are paragraph text.
+ * Uses random block/span keys as EmDash expects.
  */
 function toPortableText(content) {
   if (Array.isArray(content)) return content;
   const text = typeof content === 'string' ? content : String(content ?? '');
-  const paragraphs = text.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
-  const blocks = paragraphs.length ? paragraphs : [text];
   const key = () => Math.random().toString(36).slice(2, 10);
-  return blocks.map((p) => ({
+  // Split a line into spans, turning **bold** segments into strong marks.
+  const toSpans = (str) => {
+    const spans = [];
+    const re = /\*\*(.+?)\*\*/g;
+    let last = 0;
+    let m;
+    while ((m = re.exec(str))) {
+      if (m.index > last) spans.push({ _type: 'span', _key: key(), text: str.slice(last, m.index), marks: [] });
+      spans.push({ _type: 'span', _key: key(), text: m[1], marks: ['strong'] });
+      last = m.index + m[0].length;
+    }
+    if (last < str.length) spans.push({ _type: 'span', _key: key(), text: str.slice(last), marks: [] });
+    return spans.length ? spans : [{ _type: 'span', _key: key(), text: str, marks: [] }];
+  };
+  const mk = (style, str, extra = {}) => ({
     _type: 'block',
     _key: key(),
-    style: 'normal',
+    style,
     markDefs: [],
-    children: [{ _type: 'span', _key: key(), text: p, marks: [] }],
-  }));
+    ...extra,
+    children: toSpans(str),
+  });
+
+  const blocks = [];
+  // Split into logical lines; blank lines act as separators between paragraphs.
+  const lines = text.replace(/\r\n/g, '\n').split('\n');
+  let paragraph = [];
+  const flush = () => {
+    if (paragraph.length) {
+      blocks.push(mk('normal', paragraph.join(' ').trim()));
+      paragraph = [];
+    }
+  };
+
+  for (const raw of lines) {
+    const line = raw.trim();
+    if (!line) { flush(); continue; }
+    if (line.startsWith('### ')) { flush(); blocks.push(mk('h3', line.slice(4).trim())); }
+    else if (line.startsWith('## ')) { flush(); blocks.push(mk('h2', line.slice(3).trim())); }
+    else if (line.startsWith('# ')) { flush(); blocks.push(mk('h2', line.slice(2).trim())); }
+    else if (line.startsWith('- ') || line.startsWith('* ')) {
+      flush();
+      blocks.push(mk('normal', line.slice(2).trim(), { listItem: 'bullet', level: 1 }));
+    }
+    else if (line.startsWith('> ')) { flush(); blocks.push(mk('blockquote', line.slice(2).trim())); }
+    else { paragraph.push(line); }
+  }
+  flush();
+
+  return blocks.length ? blocks : [mk('normal', text)];
 }
 
 async function handleToolCall(request) {
@@ -204,6 +307,86 @@ async function handleToolCall(request) {
                   (p) =>
                     `- [${p.status ?? '?'}] ${p.data?.title ?? p.title ?? '(untitled)'} ` +
                     `(${p.slug ?? '?'})${p.publishedAt ? ` - ${p.publishedAt}` : ''}`
+                )
+                .join('\n'),
+          },
+        ],
+      };
+    }
+
+    case 'write_project': {
+      const {
+        title,
+        description,
+        fullContent,
+        techStack = [],
+        category,
+        githubUrl,
+        liveUrl,
+        featured = false,
+        slug,
+        publish = false,
+      } = args;
+
+      const data = {
+        title,
+        description,
+        ...(fullContent ? { full_content: toPortableText(fullContent) } : {}),
+        ...(Array.isArray(techStack) && techStack.length ? { tech_stack: techStack } : {}),
+        ...(category ? { category } : {}),
+        ...(githubUrl ? { github_url: githubUrl } : {}),
+        ...(liveUrl ? { live_url: liveUrl } : {}),
+        featured: featured ? 1 : 0,
+      };
+
+      const created = await emdashRequest('POST', `/_emdash/api/content/projects`, {
+        data,
+        ...(slug ? { slug } : {}),
+      });
+      const item = created?.data?.item ?? created?.item ?? created;
+      const id = item?.id;
+      const projectSlug = item?.slug ?? slug ?? '';
+      let status = item?.status ?? 'draft';
+
+      if (publish && id) {
+        const pub = await emdashRequest('POST', `/_emdash/api/content/projects/${id}/publish`, {});
+        status = pub?.data?.item?.status ?? 'published';
+      }
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text:
+              `Project created${publish ? ' and published' : ' (draft)'}.\n\n` +
+              `Title: ${item?.data?.title ?? title}\n` +
+              `Slug: ${projectSlug}\n` +
+              `Status: ${status}\n` +
+              `ID: ${id ?? 'unknown'}\n\n` +
+              (status === 'published'
+                ? `Live: ${BASE_URL}/projects/${projectSlug}`
+                : `Publish it from the EmDash admin. Once published: ${BASE_URL}/projects/${projectSlug}`),
+          },
+        ],
+      };
+    }
+
+    case 'get_projects': {
+      const limit = args?.limit || 10;
+      const result = await emdashRequest('GET', `/_emdash/api/content/projects?limit=${limit}`);
+      const items = result?.data?.items ?? result?.items ?? [];
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text:
+              `Found ${items.length} project(s):\n\n` +
+              items
+                .map(
+                  (p) =>
+                    `- [${p.status ?? '?'}] ${p.data?.title ?? p.title ?? '(untitled)'} ` +
+                    `(${p.slug ?? '?'})${p.data?.category ? ` · ${p.data.category}` : ''}`
                 )
                 .join('\n'),
           },
