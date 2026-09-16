@@ -247,6 +247,14 @@ body {
 	height: 160px;
 }
 
+/* Imageless project cards: use this theme's gradient for the placeholder
+   banner (like the post cards above), but keep the 16:9 frame so they line
+   up with project cards that do have an image. The centered initial glyph
+   comes from ProjectCard.astro. */
+.project-card .card-placeholder {
+	background: var(--theme-gradient-1);
+}
+
 /* Blog section on home reuses .blog-section background */
 .blog-section {
 	background: var(--color-bg-subtle);

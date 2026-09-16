@@ -34,7 +34,11 @@ const categoryLabels: Record<string, string> = {
 					<Image image={featuredImage} />
 				</div>
 			) : (
-				<div class="card-placeholder" />
+				<div class="card-placeholder" aria-hidden="true">
+					<span class="card-placeholder-glyph">
+						{(title?.trim()?.[0] ?? "?").toUpperCase()}
+					</span>
+				</div>
 			)
 		}
 		<div class="card-body">
@@ -116,9 +120,29 @@ const categoryLabels: Record<string, string> = {
 		transform: scale(1.03);
 	}
 
+	/* Imageless project cards get a filled, branded 16:9 banner (matching
+	   the .card-image frame) instead of a flat grey box. The glyph is the
+	   project title's initial. Themes may override the background to their
+	   own gradient; the initial + centering stay. */
 	:where(.project-card .card-placeholder) {
 		aspect-ratio: 16 / 9;
-		background: var(--color-bg-subtle);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: linear-gradient(
+			135deg,
+			var(--color-brand) 0%,
+			var(--color-brand-hover, var(--color-brand)) 100%
+		);
+	}
+
+	:where(.project-card .card-placeholder-glyph) {
+		font-size: clamp(2.5rem, 6vw, 4rem);
+		font-weight: var(--font-weight-display);
+		line-height: 1;
+		color: var(--color-on-brand, #fff);
+		opacity: 0.9;
+		user-select: none;
 	}
 
 	:where(.project-card .card-body) {
