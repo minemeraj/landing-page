@@ -8,6 +8,10 @@ uploads
 data.db
 .DS_Store
 
+# Local scratch / tool output (Playwright snapshots, drafts, etc.)
+tmp/
+.playwright-mcp/
+
 # Environment / Wrangler secrets
 .env
 .env.*
