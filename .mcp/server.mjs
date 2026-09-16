@@ -126,6 +126,27 @@ async function emdashRequest(method, path, body) {
   return payload;
 }
 
+/**
+ * Convert caller-supplied content into EmDash Portable Text blocks.
+ * - If it's already an array (Portable Text), pass through untouched.
+ * - Otherwise split a string on blank lines into paragraph blocks, each with a
+ *   single span child. Uses random block/span keys as EmDash expects.
+ */
+function toPortableText(content) {
+  if (Array.isArray(content)) return content;
+  const text = typeof content === 'string' ? content : String(content ?? '');
+  const paragraphs = text.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
+  const blocks = paragraphs.length ? paragraphs : [text];
+  const key = () => Math.random().toString(36).slice(2, 10);
+  return blocks.map((p) => ({
+    _type: 'block',
+    _key: key(),
+    style: 'normal',
+    markDefs: [],
+    children: [{ _type: 'span', _key: key(), text: p, marks: [] }],
+  }));
+}
+
 async function handleToolCall(request) {
   const { name, arguments: args } = request.params;
 
@@ -137,7 +158,10 @@ async function handleToolCall(request) {
         data: {
           title,
           excerpt: excerpt || '',
-          content,
+          // The `content` field is EmDash Portable Text (an array of blocks),
+          // not a string. Accept a plain string or Markdown from the caller and
+          // convert each blank-line-separated paragraph into a text block.
+          content: toPortableText(content),
           ...(featuredImage ? { featured_image: featuredImage } : {}),
         },
         ...(slug ? { slug } : {}),
