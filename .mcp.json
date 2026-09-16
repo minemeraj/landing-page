@@ -1,8 +1,16 @@
 {
-	"mcpServers": {
-		"emdash-docs": {
-			"type": "http",
-			"url": "https://docs.emdashcms.com/mcp"
-		}
-	}
+  "mcpServers": {
+    "emdash-docs": {
+      "type": "http",
+      "url": "https://docs.emdashcms.com/mcp"
+    },
+    "emdash-blog": {
+      "command": "node",
+      "args": ["${workspaceFolder}/.mcp/server.mjs"],
+      "env": {
+        "EMDASH_API_TOKEN": "${env:EMDASH_API_TOKEN}",
+        "EMDASH_BASE_URL": "https://landing-page.mineme-shahriar.workers.dev"
+      }
+    }
+  }
 }
