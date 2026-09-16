@@ -1,5 +1,5 @@
 ---
-import { getEmDashCollection, getTaxonomyTerms, getSeoMeta } from "emdash";
+import { getEmDashCollection, getSeoMeta, getSiteSettings } from "emdash";
 import Base from "../../layouts/Base.astro";
 import ProjectCard from "../../components/ProjectCard.astro";
 import { resolveBlogSiteIdentity } from "../../utils/site-identity";
@@ -18,11 +18,19 @@ const seo = getSeoMeta(
 	}
 );
 
-// Get all project categories for filtering
-const categories = await getTaxonomyTerms("projects", "category");
+// Project categories (defined as a field option, not a taxonomy)
+const CATEGORIES = [
+	{ slug: "web", label: "Web Application" },
+	{ slug: "mobile", label: "Mobile App" },
+	{ slug: "cli", label: "CLI Tool" },
+	{ slug: "library", label: "Library/Package" },
+	{ slug: "api", label: "API/Backend" },
+	{ slug: "design", label: "Design/UX" },
+	{ slug: "other", label: "Other" },
+];
 
 const categoryParam = Astro.url.searchParams.get("category");
-const filter = categoryParam ? { terms: { category: categoryParam } } : {};
+const filter = categoryParam ? { where: { category: categoryParam } } : {};
 
 const { entries: projects, cacheHint } = await getEmDashCollection("projects", {
 	orderBy: { published_at: "desc" },
@@ -56,7 +64,7 @@ if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
 			>
 				All
 			</button>
-			{categories.map((category) => (
+			{CATEGORIES.map((category) => (
 				<button 
 					class={`filter-btn ${categoryParam === category.slug ? 'active' : ''}`}
 					onclick={`window.location.search = 'category=${category.slug}'`}
