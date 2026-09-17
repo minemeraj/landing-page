@@ -6,6 +6,7 @@ import { formsPlugin } from "@emdash-cms/plugin-forms";
 import webhookNotifier from "@emdash-cms/plugin-webhook-notifier";
 import { betterAuthProvider, betterAuthSettingsPlugin } from "emdash-better-auth";
 import { seoPlugin } from "@jdevalk/emdash-plugin-seo";
+import rag from "@emdash/rag";
 import { defineConfig, fontProviders } from "astro/config";
 import emdash from "emdash/astro";
 import emdashSmtp from "emdash-smtp";
@@ -41,7 +42,14 @@ export default defineConfig({
 			// Auth (verification toggles, canonical URL, Google + Better Auth
 			// secrets). The auth provider reads those values at request time with
 			// env-var fallback.
-			plugins: [formsPlugin(), emdashSmtp(), betterAuthSettingsPlugin(), seoPlugin()],
+			//
+			// rag() = @emdash/rag as a NATIVE (trusted/internal) plugin. It runs in
+			// the host Worker isolate and reaches Cloudflare directly through
+			// bindings — tokenless. The default backend is Cloudflare AI Search
+			// (the "easy path"), which needs the AI_SEARCH + R2 bindings in
+			// wrangler.jsonc. Non-secret settings (instance/bucket/collections)
+			// are set in Admin → Plugins → RAG Search; no API token is stored.
+			plugins: [formsPlugin(), emdashSmtp(), betterAuthSettingsPlugin(), seoPlugin(), rag()],
 			sandboxed: [webhookNotifier],
 			sandboxRunner: sandbox(),
 			marketplace: "https://marketplace.emdashcms.com",
