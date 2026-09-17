@@ -28,7 +28,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "emdash": "^0.30.0",
-    "emdash-ai-search": "file:/Users/shahriarrobbani/Documents/GitHub/emdash-rag/emdash-ai-search-0.4.0.tgz",
+    "emdash-ai-search": "file:/Users/shahriarrobbani/Documents/GitHub/emdash-ai-search/emdash-ai-search-0.4.0.tgz",
     "emdash-better-auth": "^0.4.0",
     "emdash-smtp": "^0.3.4",
     "kysely-d1": "^0.4.0",
