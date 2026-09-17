@@ -15,22 +15,22 @@
 			"binding": "MEDIA",
 			"bucket_name": "landing-page-media","preview_bucket_name": "landing-page-media",
 		},
-		// Bucket the @emdash/rag (native) AI Search backend writes page files into;
-		// the AI Search instance crawls this bucket. Create it before deploying:
-		//   npx wrangler r2 bucket create emdash-rag-content
+		// Bucket the emdash-ai-search (native) backend writes page files into; the
+		// AI Search instance crawls this bucket. Create it before deploying:
+		//   npx wrangler r2 bucket create emdash-ai-search-content
 		{
 			"binding": "R2",
-			"bucket_name": "emdash-rag-content",
+			"bucket_name": "emdash-ai-search-content",
 		},
 	],
-	// Workers AI — used by @emdash/rag (native) for chat generation. Tokenless.
+	// Workers AI — used by emdash-ai-search (native) for chat generation. Tokenless.
 	"ai": {
 		"binding": "AI",
 	},
-	// Cloudflare AI Search (formerly AutoRAG) namespace binding for @emdash/rag
+	// Cloudflare AI Search (formerly AutoRAG) namespace binding for emdash-ai-search
 	// (native). The plugin calls AI_SEARCH.get(<instance name from settings>).
 	// Create the AI Search instance in the dashboard (Compute & AI → AI Search)
-	// pointed at the emdash-rag-content R2 bucket before deploying.
+	// pointed at the emdash-ai-search-content R2 bucket before deploying.
 	"ai_search_namespaces": [
 		{
 			"binding": "AI_SEARCH",

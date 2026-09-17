@@ -6,7 +6,7 @@ import { formsPlugin } from "@emdash-cms/plugin-forms";
 import webhookNotifier from "@emdash-cms/plugin-webhook-notifier";
 import { betterAuthProvider, betterAuthSettingsPlugin } from "emdash-better-auth";
 import { seoPlugin } from "@jdevalk/emdash-plugin-seo";
-import rag from "@emdash/rag";
+import aiSearch from "emdash-ai-search";
 import { defineConfig, fontProviders } from "astro/config";
 import emdash from "emdash/astro";
 import emdashSmtp from "emdash-smtp";
@@ -43,13 +43,13 @@ export default defineConfig({
 			// secrets). The auth provider reads those values at request time with
 			// env-var fallback.
 			//
-			// rag() = @emdash/rag as a NATIVE (trusted/internal) plugin. It runs in
-			// the host Worker isolate and reaches Cloudflare directly through
-			// bindings — tokenless. The default backend is Cloudflare AI Search
-			// (the "easy path"), which needs the AI_SEARCH + R2 bindings in
-			// wrangler.jsonc. Non-secret settings (instance/bucket/collections)
-			// are set in Admin → Plugins → RAG Search; no API token is stored.
-			plugins: [formsPlugin(), emdashSmtp(), betterAuthSettingsPlugin(), seoPlugin(), rag()],
+			// aiSearch() = emdash-ai-search as a NATIVE (trusted/internal) plugin.
+			// It runs in the host Worker isolate and reaches Cloudflare directly
+			// through bindings — tokenless. The default backend is Cloudflare AI
+			// Search (the "easy path"), which needs the AI_SEARCH + R2 bindings in
+			// wrangler.jsonc. Non-secret settings (instance/bucket/collections) are
+			// set in Admin → Plugins → AI Search; no API token is stored.
+			plugins: [formsPlugin(), emdashSmtp(), betterAuthSettingsPlugin(), seoPlugin(), aiSearch()],
 			sandboxed: [webhookNotifier],
 			sandboxRunner: sandbox(),
 			marketplace: "https://marketplace.emdashcms.com",
