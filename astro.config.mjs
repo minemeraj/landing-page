@@ -39,6 +39,11 @@ export default defineConfig({
 		"/pages/**": { maxAge: 300, swr: 86400 },
 		"/category/**": { maxAge: 300, swr: 86400 },
 		"/tag/**": { maxAge: 300, swr: 86400 },
+		// CMS media files are content-addressed (immutable ULID filenames) --
+		// safe to cache for a year. Without an explicit rule here, enabling
+		// `cache.provider` overrides this route's own Cache-Control with
+		// Astro's conservative no-rule default instead of preserving it.
+		"/_emdash/api/media/file/[...key]": { maxAge: 31536000 },
 	},
 	// Tailwind v4 is required to compile the Better Auth UI (HeroUI) styles used
 	// by the emdash-better-auth plugin's auth pages. Its output is
