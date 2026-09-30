@@ -19,4 +19,6 @@ minimumReleaseAgeExclude:
   # First-party auth plugin (we publish it); exempt from the cooldown so a fresh
   # release can be consumed immediately, same as the other EmDash packages above.
   - emdash-better-auth
+  # First-party AI search plugin (we publish it); same rationale as above.
+  - emdash-ai-search
 blockExoticSubdeps: true
