@@ -20,7 +20,7 @@ const seo = getSeoMeta(
 );
 
 // Get all post categories for filtering
-const categories = await getTaxonomyTerms("posts", "category");
+const categories = await getTaxonomyTerms("category");
 
 const categoryParam = Astro.url.searchParams.get("category");
 // Build query filters

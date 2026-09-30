@@ -5,6 +5,7 @@ import { getReadingTime } from "../utils/reading-time";
 import { resolveBlogSiteIdentity } from "../utils/site-identity";
 import FeaturedProjects from "../components/home/FeaturedProjects.astro";
 import LatestPosts from "../components/home/LatestPosts.astro";
+import Newsletter from "../components/home/Newsletter.astro";
 
 const FEATURED_PROJECTS_LIMIT = 3;
 const LATEST_POSTS_LIMIT = 4;
@@ -138,23 +139,10 @@ const projectsData = projectsForHome.map((project) => ({
 	</section>
 
 	<!-- Newsletter Section -->
-	<section class="newsletter-section">
-		<div class="section-container">
-			<div class="newsletter-content">
-				<h2 class="newsletter-title">Stay in the loop</h2>
-				<p class="newsletter-subtitle">
-					Get notified when new projects are published. One email per project, no spam, unsubscribe anytime.
-				</p>
-				<form class="newsletter-form" action="/#newsletter" method="post">
-					<div class="form-group">
-						<input type="email" name="email" placeholder="Your email address" required class="form-input" />
-						<button type="submit" class="btn btn-primary">Subscribe</button>
-					</div>
-					<p class="form-note">No spam. Unsubscribe anytime.</p>
-				</form>
-			</div>
-		</div>
-	</section>
+	<Newsletter
+		title="Stay in the loop"
+		subtitle="Get notified when new projects are published. One email per project, no spam, unsubscribe anytime."
+	/>
 </Base>
 
 <style>
@@ -303,68 +291,6 @@ const projectsData = projectsForHome.map((project) => ({
 		color: var(--color-text-secondary);
 	}
 
-	.newsletter-section {
-		padding: var(--spacing-20) 0;
-	}
-
-	.newsletter-content {
-		max-width: 600px;
-		margin: 0 auto;
-		text-align: center;
-	}
-
-	.newsletter-title {
-		font-size: clamp(1.75rem, 4vw, var(--font-size-3xl));
-		font-weight: var(--font-weight-display);
-		letter-spacing: var(--tracking-tight);
-		margin-bottom: var(--spacing-4);
-	}
-
-	.newsletter-subtitle {
-		font-size: var(--font-size-lg);
-		line-height: var(--leading-relaxed);
-		color: var(--color-text-secondary);
-		margin-bottom: var(--spacing-8);
-	}
-
-	.newsletter-form {
-		display: flex;
-		gap: var(--spacing-4);
-		justify-content: center;
-		flex-wrap: wrap;
-	}
-
-	.form-group {
-		display: flex;
-		gap: var(--spacing-2);
-		flex: 1;
-		min-width: 300px;
-	}
-
-	.form-input {
-		flex: 1;
-		padding: var(--spacing-3) var(--spacing-4);
-		font-size: var(--font-size-base);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-lg);
-		background: var(--color-surface);
-		color: var(--color-text);
-		transition: all 0.2s;
-	}
-
-	.form-input:focus {
-		outline: none;
-		border-color: var(--color-brand);
-		box-shadow: 0 0 0 3px var(--color-brand-ring);
-	}
-
-	.form-note {
-		width: 100%;
-		text-align: center;
-		font-size: var(--font-size-sm);
-		color: var(--color-muted);
-	}
-
 	.btn {
 		display: inline-flex;
 		align-items: center;
@@ -417,8 +343,7 @@ const projectsData = projectsForHome.map((project) => ({
 			padding: 6rem 1rem 3rem;
 		}
 
-		.about-section,
-		.newsletter-section {
+		.about-section {
 			padding: var(--spacing-12) 0;
 		}
 
@@ -437,9 +362,6 @@ const projectsData = projectsForHome.map((project) => ({
 		}
 		.btn {
 			width: 100%;
-		}
-		.form-group {
-			flex-direction: column;
 		}
 		.about-features {
 			grid-template-columns: 1fr;
