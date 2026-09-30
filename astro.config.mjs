@@ -44,6 +44,13 @@ export default defineConfig({
 		// `cache.provider` overrides this route's own Cache-Control with
 		// Astro's conservative no-rule default instead of preserving it.
 		"/_emdash/api/media/file/[...key]": { maxAge: 31536000 },
+		// Astro's own resize/reformat endpoint. Each unique href+width+height+
+		// format query string is its own cache key, and the transform is
+		// deterministic, so this is safe to cache for a year too. Without this
+		// rule every responsive <img> variant re-runs the Cloudflare Images
+		// transform on every single request (1-2s each) instead of being
+		// served from the edge.
+		"/_image": { maxAge: 31536000 },
 	},
 	// Tailwind v4 is required to compile the Better Auth UI (HeroUI) styles used
 	// by the emdash-better-auth plugin's auth pages. Its output is
