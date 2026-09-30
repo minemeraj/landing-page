@@ -102,6 +102,7 @@ const postsWithTags = posts.map((post) => ({
 								readingTime={getReadingTime(post.data.content)}
 								tags={tags.map((t) => ({ slug: t.slug, label: t.label }))}
 								bylines={bylines}
+								priority={index === 0}
 							/>
 						</div>
 					))}

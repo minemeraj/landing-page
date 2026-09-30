@@ -69,7 +69,7 @@ const filteredPosts = posts.map((post) => ({
 				<p class="no-posts">No posts with this tag yet.</p>
 			) : (
 				<div class="posts-grid">
-					{filteredPosts.map(({ post, tags }) => (
+					{filteredPosts.map(({ post, tags }, index) => (
 						<PostCard
 							title={post.data.title}
 							excerpt={post.data.excerpt}
@@ -79,6 +79,7 @@ const filteredPosts = posts.map((post) => ({
 							readingTime={getReadingTime(post.data.content)}
 							tags={tags.map((t) => ({ slug: t.slug, label: t.label }))}
 							bylines={post.data.bylines}
+							priority={index === 0}
 						/>
 					))}
 				</div>

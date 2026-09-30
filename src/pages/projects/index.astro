@@ -89,6 +89,7 @@ if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
 								category={project.data.category}
 								githubUrl={project.data.github_url}
 								liveUrl={project.data.live_url}
+								priority={index === 0}
 							/>
 						</div>
 					))}

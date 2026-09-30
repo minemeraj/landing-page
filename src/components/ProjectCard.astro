@@ -10,9 +10,11 @@ interface Props {
 	category?: string;
 	githubUrl?: string;
 	liveUrl?: string;
+	/** Eager-load this card's image instead of lazy (use for the first/above-fold card). */
+	priority?: boolean;
 }
 
-const { title, description, featuredImage, href, category, githubUrl, liveUrl } =
+const { title, description, featuredImage, href, category, githubUrl, liveUrl, priority } =
 	Astro.props;
 
 const categoryLabels: Record<string, string> = {
@@ -31,7 +33,7 @@ const categoryLabels: Record<string, string> = {
 		{
 			featuredImage ? (
 				<div class="card-image">
-					<Image image={featuredImage} />
+					<Image image={featuredImage} priority={priority} />
 				</div>
 			) : (
 				<div class="card-placeholder" aria-hidden="true">

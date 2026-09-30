@@ -43,6 +43,7 @@ const { posts, viewAllHref = "/posts" } = Astro.props;
 							href={`/posts/${post.id}`}
 							date={post.date}
 							readingTime={post.readingTime}
+							priority={index === 0}
 							tags={post.tags}
 							bylines={post.bylines}
 						/>

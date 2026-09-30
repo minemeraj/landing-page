@@ -43,6 +43,7 @@ const { projects, viewAllHref = "/projects" } = Astro.props;
 							category={project.category}
 							githubUrl={project.githubUrl}
 							liveUrl={project.liveUrl}
+							priority={index === 0}
 						/>
 					</div>
 				))

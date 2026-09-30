@@ -91,7 +91,7 @@ const otherProjects = recentProjects.filter((p) => p.id !== project.id).slice(0,
 		{
 			project.data.featured_image && (
 				<div class="detail-hero" {...project.edit.featured_image}>
-					<Image image={project.data.featured_image} />
+					<Image image={project.data.featured_image} priority />
 				</div>
 			)
 		}

@@ -11,6 +11,8 @@ interface Props {
 	readingTime?: number;
 	tags?: Array<{ slug: string; label: string }>;
 	bylines?: ContentBylineCredit[];
+	/** Eager-load this card's image instead of lazy (use for the first/above-fold card). */
+	priority?: boolean;
 }
 
 const {
@@ -22,6 +24,7 @@ const {
 	readingTime,
 	tags,
 	bylines,
+	priority,
 } = Astro.props;
 
 const formattedDate = date
@@ -38,7 +41,7 @@ const formattedDate = date
 		{
 			featuredImage ? (
 				<div class="card-image">
-					<Image image={featuredImage} />
+					<Image image={featuredImage} priority={priority} />
 				</div>
 			) : (
 				<div class="card-placeholder" />
