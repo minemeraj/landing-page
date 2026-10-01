@@ -22,6 +22,16 @@ export default defineConfig({
 	// arrive on the raw *.workers.dev host.
 	site: "https://theweekendprojects.com",
 	adapter: cloudflare(),
+	// Inline ALL component CSS into each page's <head> instead of emitting
+	// external <link rel="stylesheet"> files. Those links are render-blocking:
+	// the browser must fetch each one before it can paint. Inlining removes
+	// those round trips from the critical path so the page paints straight from
+	// the HTML document (which is itself edge-cached). This site's CSS is small
+	// (a few tens of KB), so the extra per-page HTML weight is far cheaper than
+	// the blocking fetches it replaces. See .agents/skills/cloudflare-performance.
+	build: {
+		inlineStylesheets: "always",
+	},
 	// Fronts the Worker with Cloudflare's Workers Cache so cacheable GET
 	// responses (HTML with a route rule below, plus any response that already
 	// sets a public Cache-Control, e.g. the CMS media route) are served from
