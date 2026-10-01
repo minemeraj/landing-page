@@ -244,6 +244,32 @@ static fallback — an unconfigured site 404s on `/favicon.ico`. Ship one direct
   (`sharp` is often already present as a transitive dependency but not hoisted — resolve
   its real path under `node_modules/.pnpm/` rather than `npm install`-ing a new copy.)
 
+## 4b. Preconnect to cross-origin third-party resources
+
+Any script/style/font/widget loaded from a *different* origin (an analytics tag, an
+embedded search/chat widget, a font CDN) makes the browser pay a cold DNS + TLS handshake
+the first time it reaches that resource's URL in the markup. On a real site that handshake
+was the single longest leg of the request graph (~300ms) even though the resource itself
+was small and deferred. A `<link rel="preconnect" href="https://<third-party-origin>"
+crossorigin>` in `<head>` warms that connection in parallel with earlier work, so when the
+resource is actually requested the socket is already open.
+
+Key points:
+- A preconnect (like a preload) is a hint, not a dependency — it never blocks paint. Pure
+  upside for a known third-party origin that *will* be used on the page.
+- Add `crossorigin` when the eventual fetch is CORS (e.g. a `type="module"` script or a
+  font), so the warmed connection actually matches and gets reused.
+- Only preconnect origins you're confident the page uses — each one holds a connection
+  open, so don't spray preconnects at origins that might not be hit.
+- Prefer emitting it from whatever *owns* the third-party resource (e.g. the plugin that
+  injects the widget, deriving the origin from its own configured endpoint) rather than
+  hardcoding the host in the site layout — that keeps it correct across config changes and
+  benefits every site using that plugin. Hardcoding in the layout works as a quick test but
+  goes stale if the endpoint changes (a stale preconnect is harmless, just ignored).
+- Measure it in PageSpeed Insights / Lighthouse under the network-dependency-tree /
+  "Maximum critical path latency" diagnostic — a correct preconnect shows the third-party
+  leg shrink and the origin listed under "Preconnected origins".
+
 ## 5. Object cache (KV) in front of D1
 
 Every page render does several D1 round trips (site settings, menus, content, taxonomy
