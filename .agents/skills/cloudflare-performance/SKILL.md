@@ -272,6 +272,37 @@ here never runs the Worker's D1 queries, but it also doesn't skip the Worker lik
 edge-cache HTML hit does — the two layers solve different problems and are meant to be
 used together, not as alternatives.
 
+**Measuring it correctly (two traps that make it look like a no-op):**
+
+1. **It only helps WARM isolates.** The cache is epoch-keyed: the *first* render of a
+   given key on a cold isolate is always a MISS and runs the full DB queries; only
+   subsequent renders on that same warm isolate (or any render sharing already-cached
+   settings/menus/taxonomy/entry keys) skip D1. So a benchmark of only cache-busted,
+   cross-colo, cold-isolate requests will show ZERO improvement by construction — that's
+   exactly the one case the cache can't help. To see the win, hit origin renders rapidly
+   enough to reuse a warm isolate (`rt;dur=0` in `server-timing`) and compare `db.count`
+   there.
+2. **Watch `db.count`, NOT `cache.hit`/`cache.miss`.** The `server-timing` `cache.hit` /
+   `cache.miss` counters measure EmDash's *in-request dedupe*, not this object cache — they
+   stay flat regardless of whether KV is working, so they're useless for verifying it. The
+   only observable signal of a working object cache is `db.count` (and `db.total`) dropping
+   on warm renders. Measured on a real site: a warm render went from ~14 D1 queries to ~2–3
+   once the cache was active, with `db.total` dropping from ~500ms to ~60ms.
+
+If `db.count` never drops even on warm isolates, the cache is silently a no-op. Most likely
+cause: the KV binding named in `kvCache({ binding })` isn't present at runtime — if
+`createObjectCache` can't find `env[binding]` it throws, the runtime swallows it to a
+null (passthrough) backend, and only warns in DEV. Confirm the binding shows in the
+`wrangler deploy` output (`env.CACHE  KV Namespace`) and that `objectCacheConfig` is baked
+into the build.
+
+**Reality check on impact:** this speeds warm *origin* renders and cuts D1 load, but your
+most common real traffic is edge-HTML HITs (section 2) that skip the Worker entirely and
+never touch D1 or KV — those see no change. The object cache's payoff is the in-between
+(cache-miss renders on warm isolates, and routes without edge rules), plus lower D1
+row-read pressure as traffic grows. Treat it as D1-offload + tail-latency, not an FCP/LCP
+win.
+
 ## 6. Targeted Placement (D1 locality)
 
 Cloudflare runs a Worker near the visitor by default, but EmDash makes several D1 round

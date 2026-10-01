@@ -2,7 +2,7 @@ import cloudflare from "@astrojs/cloudflare";
 import { cacheCloudflare } from "@astrojs/cloudflare/cache";
 import react from "@astrojs/react";
 import tailwindcss from "@tailwindcss/vite";
-import { d1, r2, sandbox } from "@emdash-cms/cloudflare";
+import { d1, r2, sandbox, kvCache } from "@emdash-cms/cloudflare";
 import { formsPlugin } from "@emdash-cms/plugin-forms";
 import webhookNotifier from "@emdash-cms/plugin-webhook-notifier";
 import { betterAuthProvider, betterAuthSettingsPlugin } from "emdash-better-auth";
@@ -86,6 +86,11 @@ export default defineConfig({
 		emdash({
 			database: d1({ binding: "DB", session: "auto" }),
 			storage: r2({ binding: "MEDIA" }),
+			// L2 object cache: caches content/config DB reads in the CACHE KV
+			// namespace so cold renders / cache misses serve ~10 queries from KV
+			// instead of hitting D1. Epoch-keyed, invalidated on publish; TTL is
+			// just a backstop. Binding defined in wrangler.jsonc.
+			objectCache: kvCache({ binding: "CACHE" }),
 			authProviders: [betterAuthProvider()],
 			// betterAuthSettingsPlugin() adds the admin settings form for Better
 			// Auth (verification toggles, canonical URL, Google + Better Auth

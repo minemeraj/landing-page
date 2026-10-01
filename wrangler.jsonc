@@ -16,6 +16,16 @@
 			"bucket_name": "landing-page-media","preview_bucket_name": "landing-page-media",
 		},
 	],
+	// Object cache (L2) for EmDash: caches content/config DB reads (settings,
+	// menus, entries, taxonomies, bylines) in KV so cold renders / cache misses
+	// serve those from KV instead of a D1 round trip. Epoch-invalidated on
+	// publish — see astro.config.mjs `objectCache: kvCache(...)`.
+	"kv_namespaces": [
+		{
+			"binding": "CACHE",
+			"id": "7249f817e1534f139ba6872dfdf57a22",
+		},
+	],
 	// Workers AI binding (tokenless). Available to plugins that need it.
 	"ai": {
 		"binding": "AI",
